@@ -16,9 +16,11 @@ admin_bp = Blueprint('admin', __name__)
 
 @admin_bp.route('/block/<int:user_id>', methods=['DELETE'])
 def block_user(user_id):
+    # 非admin，403
     if not current_user.is_admin:
         abort(403)
     user = User.query.get_or_404(user_id)
+    # 所禁用户为admin，400
     if user.is_admin:
         abort(400)
     db.session.delete(user)

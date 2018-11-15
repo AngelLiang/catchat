@@ -11,13 +11,17 @@ from markdown import markdown
 
 
 def to_html(raw):
+    '''转为HTML'''
+    # 允许的tag
     allowed_tags = ['a', 'abbr', 'b', 'br', 'blockquote', 'code',
                     'del', 'div', 'em', 'img', 'p', 'pre', 'strong',
                     'span', 'ul', 'li', 'ol']
+    # 允许的属性
     allowed_attributes = ['src', 'title', 'alt', 'href', 'class']
     html = markdown(raw, output_format='html',
                     extensions=['markdown.extensions.fenced_code',
                                 'markdown.extensions.codehilite'])
+    # 过滤
     clean_html = clean(html, tags=allowed_tags, attributes=allowed_attributes)
     return linkify(clean_html)
 

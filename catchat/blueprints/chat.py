@@ -16,15 +16,18 @@ from catchat.utils import to_html, flash_errors
 
 chat_bp = Blueprint('chat', __name__)
 
+# 在线用户
 online_users = []
 
 
 @socketio.on('new message')
 def new_message(message_body):
     html_message = to_html(message_body)
+    # 消息入库
     message = Message(author=current_user._get_current_object(), body=html_message)
     db.session.add(message)
     db.session.commit()
+    # 广播
     emit('new message',
          {'message_html': render_template('chat/_message.html', message=message),
           'message_body': html_message,
@@ -39,6 +42,7 @@ def new_anonymous_message(message_body):
     html_message = to_html(message_body)
     avatar = 'https://www.gravatar.com/avatar?d=mm'
     nickname = 'Anonymous'
+    # 广播
     emit('new message',
          {'message_html': render_template('chat/_anonymous_message.html',
                                           message=html_message,
@@ -53,19 +57,26 @@ def new_anonymous_message(message_body):
 
 @socketio.on('connect')
 def connect():
+    '''socketio连接后就把当前用户添加到online_users'''
     global online_users
     if current_user.is_authenticated and current_user.id not in online_users:
         online_users.append(current_user.id)
+    # 广播
     emit('user count', {'count': len(online_users)}, broadcast=True)
 
 
 @socketio.on('disconnect')
 def disconnect():
+    '''socketio断开连接后就把当前用户从online_users移除'''
     global online_users
     if current_user.is_authenticated and current_user.id in online_users:
         online_users.remove(current_user.id)
+    # 广播
     emit('user count', {'count': len(online_users)}, broadcast=True)
 
+# ### socketio END ###
+
+# ### chat_bp BEGIN ###
 
 @chat_bp.route('/')
 def home():
@@ -82,6 +93,7 @@ def anonymous():
 
 @chat_bp.route('/messages')
 def get_messages():
+    '''获取消息'''
     page = request.args.get('page', 1, type=int)
     pagination = Message.query.order_by(Message.timestamp.desc()).paginate(
         page, per_page=current_app.config['CATCHAT_MESSAGE_PER_PAGE'])
@@ -112,6 +124,7 @@ def get_profile(user_id):
 
 @chat_bp.route('/message/delete/<message_id>', methods=['DELETE'])
 def delete_message(message_id):
+    '''删除消息'''
     message = Message.query.get_or_404(message_id)
     if current_user != message.author and not current_user.is_admin:
         abort(403)

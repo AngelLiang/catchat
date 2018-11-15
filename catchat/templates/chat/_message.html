@@ -13,7 +13,9 @@
         <div class="ui icon left center pointing dropdown ellipsis-icon">
             <i class="ellipsis horizontal icon"></i>
             <div class="menu" data-offset="-33">
+                {# 引用 #}
                 <div class="item quote-button"><i class="quote left icon"></i> Quote</div>
+                {# 如果是自己发送的消息或者管理员，则可以删除 #}
                 {% if current_user == message.author or current_user.is_admin %}
                     <div class="item delete-button"
                          data-href="{{ url_for('chat.delete_message', message_id=message.id) }}"
