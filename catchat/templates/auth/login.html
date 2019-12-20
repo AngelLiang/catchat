@@ -13,6 +13,7 @@
                 <img src="{{ url_for('static', filename='logo.png') }}" class="image">
                 <span class="content">Sign into CatChat</span>
             </h2>
+            {# form #}
             <form class="login ui large form" method="post" action="{{ url_for('auth.login') }}">
                 <div class="ui stacked segment">
                     <div class="field">
@@ -35,6 +36,7 @@
                     </div>
                     <div class="ui fluid large orange submit button">Login</div>
                 </div>
+                {# csrf token #}
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="ui error message"></div>
             </form>

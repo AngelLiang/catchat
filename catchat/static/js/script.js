@@ -4,9 +4,11 @@ $(document).ready(function () {
     var message_count = 0;
     var ENTER_KEY = 13;
 
+    // ajax 配置
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                // 设置请求头部
                 xhr.setRequestHeader("X-CSRFToken", csrf_token);
             }
         }
@@ -19,6 +21,7 @@ $(document).ready(function () {
 
     var page = 1;
 
+    // 加载消息
     function load_messages() {
         var $messages = $('.messages');
         var position = $messages.scrollTop();
@@ -215,6 +218,7 @@ $(document).ready(function () {
     // delete user
     $(document).on('click', '.delete-user-button', function () {
         var $this = $(this);
+        // ajax 提交
         $.ajax({
             type: 'DELETE',
             url: $this.data('href'),

@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        {# 使用了 semantic-ui #}
         <link rel="stylesheet" href="{{ url_for('static', filename='semantic-ui/semantic.min.css') }}">
     {% endblock %}
 </head>
@@ -166,17 +167,30 @@
 </div>
 
 {% block content %}{% endblock %}
+
+{# 脚本 #}
 {% block scripts %}
+    {# jquery #}
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    {# semantic-ui #}
     <script src="{{ url_for('static', filename='semantic-ui/semantic.min.js') }}"></script>
+    {# socket.io #}
     <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+    {# form #}
     <script src="{{ url_for('static', filename='js/forms.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
     <script type="text/javascript">
+        {# 设置主页 #}
         var root_url = "{{ url_for('chat.home') }}";
+
+        {# 设置消息URL #}
         var messages_url = "{{ url_for('chat.get_messages') }}";
+
+        {# 设置当前用户id #}
         var current_user_id = {{ current_user.id|default(0) }};
+
+        {# 设置 csrf token 变量 #}
         var csrf_token = "{{ csrf_token() }}";
     </script>
 {% endblock %}
