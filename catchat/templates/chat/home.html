@@ -40,6 +40,7 @@
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript">
+        {# 创建 socket.io #}
         var socket = io('/');
     </script>
 {% endblock %}

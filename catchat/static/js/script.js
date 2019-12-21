@@ -6,9 +6,11 @@ $(document).ready(function () {
 
     // ajax 配置
     $.ajaxSetup({
+        // 发送之前事件
         beforeSend: function (xhr, settings) {
             if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
                 // 设置请求头部
+                // csrf_token 变量已经在 base.html 里设置了
                 xhr.setRequestHeader("X-CSRFToken", csrf_token);
             }
         }
@@ -29,6 +31,7 @@ $(document).ready(function () {
             page++;
             $('.ui.loader').toggleClass('active');
             $.ajax({
+                // messages_url 已经在 base.html 设置了
                 url: messages_url,
                 type: 'GET',
                 data: {page: page},
@@ -60,6 +63,7 @@ $(document).ready(function () {
         if (!document.hasFocus()) {
             document.title = '(' + message_count + ') ' + 'CatChat';
         }
+        // current_user_id 已经在 base.html 设置了
         if (data.user_id !== current_user_id) {
             messageNotify(data);
         }
@@ -128,6 +132,7 @@ $(document).ready(function () {
             });
 
             notification.onclick = function () {
+                // root_url 已经在 base.html 设置了
                 window.open(root_url);
             };
             setTimeout(function () {

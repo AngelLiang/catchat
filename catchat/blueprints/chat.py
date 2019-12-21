@@ -57,7 +57,7 @@ def new_anonymous_message(message_body):
 
 @socketio.on('connect')
 def connect():
-    '''socketio连接后就把当前用户添加到online_users'''
+    """socketio连接后就把当前用户添加到online_users"""
     global online_users
     if current_user.is_authenticated and current_user.id not in online_users:
         online_users.append(current_user.id)
@@ -67,7 +67,7 @@ def connect():
 
 @socketio.on('disconnect')
 def disconnect():
-    '''socketio断开连接后就把当前用户从online_users移除'''
+    """socketio断开连接后就把当前用户从online_users移除"""
     global online_users
     if current_user.is_authenticated and current_user.id in online_users:
         online_users.remove(current_user.id)
@@ -93,7 +93,7 @@ def anonymous():
 
 @chat_bp.route('/messages')
 def get_messages():
-    '''获取消息'''
+    """获取消息"""
     page = request.args.get('page', 1, type=int)
     pagination = Message.query.order_by(Message.timestamp.desc()).paginate(
         page, per_page=current_app.config['CATCHAT_MESSAGE_PER_PAGE'])
@@ -118,13 +118,14 @@ def profile():
 
 @chat_bp.route('/profile/<user_id>')
 def get_profile(user_id):
+    """获取用户信息，返回的是一个<div>"""
     user = User.query.get_or_404(user_id)
     return render_template('chat/_profile_card.html', user=user)
 
 
 @chat_bp.route('/message/delete/<message_id>', methods=['DELETE'])
 def delete_message(message_id):
-    '''删除消息'''
+    """删除消息"""
     message = Message.query.get_or_404(message_id)
     if current_user != message.author and not current_user.is_admin:
         abort(403)

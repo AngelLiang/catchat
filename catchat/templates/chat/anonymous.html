@@ -57,6 +57,7 @@
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript">
+        {# 创建匿名 socket.io #}
         var socket = io('/anonymous');
     </script>
 {% endblock %}
